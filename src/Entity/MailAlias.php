@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MailAliasRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MailAliasRepository::class)]
 class MailAlias
@@ -15,6 +16,9 @@ class MailAlias
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    #[App\Validator\SourceEmailDomainExists]
     private ?string $source = null;
 
     #[ORM\Column(type: Types::TEXT)]
