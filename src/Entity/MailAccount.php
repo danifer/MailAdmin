@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\MailAccountRepository;
+use App\Validator\EmailMatchesDomain;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[EmailMatchesDomain]
 #[ORM\Entity(repositoryClass: MailAccountRepository::class)]
 class MailAccount
 {
