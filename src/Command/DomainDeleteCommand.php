@@ -3,6 +3,8 @@
 namespace App\Command;
 
 use App\Repository\DomainRepository;
+use App\Repository\MailAccountRepository;
+use App\Repository\MailAliasRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -20,6 +22,8 @@ class DomainDeleteCommand extends Command
     public function __construct(
         private EntityManagerInterface $entityManager,
         private DomainRepository $domainRepository,
+        private MailAccountRepository $mailAccountRepository,
+        private MailAliasRepository $mailAliasRepository,
     ) {
         parent::__construct();
     }
@@ -40,9 +44,49 @@ class DomainDeleteCommand extends Command
             return Command::FAILURE;
         }
 
+        $mailAccounts = $domain->getMailAccounts();
+        if (count($mailAccounts) > 0) {
+            $rows = $aliasRows = [];
+            foreach ($mailAccounts as $mailAccount) {
+                $aliases = $this->mailAliasRepository->findDestinationsContainingString($mailAccount->getEmail());
+
+                foreach ($aliases as $alias) {
+                    $aliasRows[] = [
+                        $alias->getSource(),
+                        $alias->getDestination(),
+                    ];
+                }
+
+                $rows[] = [
+                    $mailAccount->getEmail()
+                ];
+            }
+            $io->section('The following mail accounts that will be deleted:');
+            $io->table(['Email'], $rows);
+
+            $io->section('The following mail aliases that will be deleted:');
+            $io->table(['Source', 'Destination'], $aliasRows);
+        }
+
         if (!$io->confirm(sprintf('Are you sure you want to delete domain "%s"?', $domain->getDomainName()), false)) {
             $io->note('Operation cancelled.');
             return Command::SUCCESS;
+        }
+
+        foreach ($mailAccounts as $mailAccount) {
+            $aliases = $this->mailAliasRepository->findDestinationsContainingString($mailAccount->getEmail());
+
+            foreach ($aliases as $alias) {
+                $alias->removeFromDestination($mailAccount->getEmail());
+
+                if (empty($alias->getDestination())) {
+                    $this->entityManager->remove($alias);
+                } else {
+                    $this->entityManager->persist($alias);
+                }
+            }
+
+            $this->entityManager->remove($mailAccount);
         }
 
         $this->entityManager->remove($domain);

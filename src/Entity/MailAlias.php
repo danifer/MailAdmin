@@ -50,7 +50,11 @@ class MailAlias
 
     public function setDestination(string $destination): static
     {
-        $this->destination = $destination;
+        $destinations = array_map('trim', explode(',', $destination));
+        $destinations = array_map('strtolower', $destinations);
+        $destinations = array_filter(filter_var_array($destinations, FILTER_VALIDATE_EMAIL));
+
+        $this->destination = implode(',', $destinations);
 
         return $this;
     }
@@ -59,12 +63,13 @@ class MailAlias
     {
         $string = trim($string);
         $destinations = array_map('trim', explode(',', $this->getDestination()));
-
         $this->setDestination(
-            implode(',', array_filter(
+            implode(
+                ',',
                 array_diff(
-                $destinations, [$string]
-            )))
+                    $destinations, [$string]
+                )
+            )
         );
 
         return $this;

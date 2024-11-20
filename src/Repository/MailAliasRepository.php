@@ -16,6 +16,9 @@ class MailAliasRepository extends ServiceEntityRepository
         parent::__construct($registry, MailAlias::class);
     }
 
+    /**
+     * @return MailAlias[]
+     */
     public function findDestinationsContainingString(string $string): array
     {
         $arr = $this->createQueryBuilder('m')

@@ -48,13 +48,7 @@ class MailAliasCreateCommand extends Command
             $io->error($sourceErrors[0]->getMessage());
             return Command::FAILURE;
         }
-        
-        $destinationErrors = $this->validator->validate($destination, $emailConstraint);
-        if (count($destinationErrors) > 0) {
-            $io->error($destinationErrors[0]->getMessage());
-            return Command::FAILURE;
-        }
-        
+
         // Create and configure the mail alias
         $mailAlias = new MailAlias();
         $mailAlias->setSource($input->getArgument('source'));
