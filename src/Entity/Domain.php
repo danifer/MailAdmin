@@ -16,7 +16,7 @@ class Domain
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private ?string $domainName = null;
 
     /**

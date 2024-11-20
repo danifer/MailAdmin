@@ -25,7 +25,7 @@ class MailAccount
     #[ORM\Column(type: Types::TEXT)]
     private ?string $password = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\OneToMany(mappedBy: 'mailAccount', targetEntity: MailAlias::class, cascade: ['remove'])]

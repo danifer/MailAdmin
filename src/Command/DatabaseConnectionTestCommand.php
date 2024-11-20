@@ -45,8 +45,7 @@ class DatabaseConnectionTestCommand extends Command
             
             if ($this->connection->isConnected()) {
                 $io->success([
-                    'Database connection successful!',
-                    sprintf('Server version: %s', $this->connection->getServerVersion())
+                    'Database connection successful!'
                 ]);
                 
                 return Command::SUCCESS;
