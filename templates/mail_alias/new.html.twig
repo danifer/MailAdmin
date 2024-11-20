@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New MailAlias{% endblock %}
+
+{% block body %}
+    <h1>Create new MailAlias</h1>
+
+    {{ include('mail_alias/_form.html.twig') }}
+
+    <a href="{{ path('app_mail_alias_index') }}">back to list</a>
+{% endblock %}

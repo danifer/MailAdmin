@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MailAlias index{% endblock %}
+
+{% block body %}
+    <h1>MailAlias index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for mail_alias in mail_aliases %}
+            <tr>
+                <td>{{ mail_alias.id }}</td>
+                <td>{{ mail_alias.source }}</td>
+                <td>{{ mail_alias.destination }}</td>
+                <td>
+                    <a href="{{ path('app_mail_alias_show', {'id': mail_alias.id}) }}">show</a>
+                    <a href="{{ path('app_mail_alias_edit', {'id': mail_alias.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_mail_alias_new') }}">Create new</a>
+{% endblock %}
