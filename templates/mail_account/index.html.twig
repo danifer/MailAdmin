@@ -21,8 +21,8 @@
                 <td>{{ mail_account.password }}</td>
                 <td>{{ mail_account.email }}</td>
                 <td>
-                    <a href="{{ path('app_mail_account_show', {'id': mail_account.id}) }}">show</a>
-                    <a href="{{ path('app_mail_account_edit', {'id': mail_account.id}) }}">edit</a>
+                    <a href="{{ path('app_mail_account_show', {'id': mail_account.id}) }}" class="btn btn-sm btn-info">Show</a>
+                    <a href="{{ path('app_mail_account_edit', {'id': mail_account.id}) }}" class="btn btn-sm btn-primary">Edit</a>
                 </td>
             </tr>
         {% else %}

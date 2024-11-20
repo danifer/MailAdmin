@@ -22,9 +22,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_mail_account_index') }}">back to list</a>
-
-    <a href="{{ path('app_mail_account_edit', {'id': mail_account.id}) }}">edit</a>
+    <div class="mt-4">
+        <a href="{{ path('app_mail_account_index') }}" class="btn btn-secondary">Back to List</a>
+        <a href="{{ path('app_mail_account_edit', {'id': mail_account.id}) }}" class="btn btn-primary">Edit</a>
+    </div>
 
     {{ include('mail_account/_delete_form.html.twig') }}
 {% endblock %}
