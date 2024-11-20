@@ -37,12 +37,11 @@ class MailAliasListCommand extends Command
                 $alias->getId(),
                 $alias->getSource(),
                 $alias->getDestination(),
-                $alias->getDomain()->getDomainName(),
             ];
         }
 
         $io->table(
-            ['ID', 'Source', 'Destination', 'Domain'],
+            ['ID', 'Source', 'Destination'],
             $rows
         );
 

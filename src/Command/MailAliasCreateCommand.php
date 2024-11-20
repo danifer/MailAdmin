@@ -32,8 +32,7 @@ class MailAliasCreateCommand extends Command
     {
         $this
             ->addArgument('source', InputArgument::REQUIRED, 'The source email address')
-            ->addArgument('destination', InputArgument::REQUIRED, 'The destination email address')
-            ->addArgument('domain', InputArgument::REQUIRED, 'The domain name');
+            ->addArgument('destination', InputArgument::REQUIRED, 'The destination email addresses (comma-separated)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -57,20 +56,10 @@ class MailAliasCreateCommand extends Command
             return Command::FAILURE;
         }
         
-        // Get and validate domain
-        $domainName = $input->getArgument('domain');
-        $domain = $this->domainRepository->findOneBy(['domainName' => $domainName]);
-        
-        if (!$domain) {
-            $io->error(sprintf('Domain "%s" not found.', $domainName));
-            return Command::FAILURE;
-        }
-
         // Create and configure the mail alias
         $mailAlias = new MailAlias();
         $mailAlias->setSource($input->getArgument('source'));
         $mailAlias->setDestination($input->getArgument('destination'));
-        $mailAlias->setDomain($domain);
 
         // Validate the entity
         $errors = $this->validator->validate($mailAlias);
