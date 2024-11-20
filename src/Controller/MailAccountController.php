@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\MailAccount;
+use App\Service\PasswordHasher;
 use App\Form\MailAccountType;
 use App\Repository\MailAccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,13 +24,16 @@ final class MailAccountController extends AbstractController
     }
 
     #[Route('/new', name: 'app_mail_account_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PasswordHasher $passwordHasher): Response
     {
         $mailAccount = new MailAccount();
         $form = $this->createForm(MailAccountType::class, $mailAccount);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $mailAccount->setPassword(
+                $passwordHasher->hashPassword($mailAccount->getPassword())
+            );
             $entityManager->persist($mailAccount);
             $entityManager->flush();
 
@@ -52,12 +56,19 @@ final class MailAccountController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_mail_account_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, MailAccount $mailAccount, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, MailAccount $mailAccount, EntityManagerInterface $entityManager, PasswordHasher $passwordHasher): Response
     {
+        $originalPassword = $mailAccount->getPassword();
         $form = $this->createForm(MailAccountType::class, $mailAccount);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Only hash the password if it was changed
+            if ($mailAccount->getPassword() !== $originalPassword) {
+                $mailAccount->setPassword(
+                    $passwordHasher->hashPassword($mailAccount->getPassword())
+                );
+            }
             $entityManager->flush();
 
             $this->addFlash('success', 'Mail account updated successfully.');
