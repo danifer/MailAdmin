@@ -12,6 +12,22 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
             <a class="navbar-brand" href="/">MailAdmin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_domain_index') }}">Domains</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_mail_account_index') }}">Mail Accounts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_mail_alias_index') }}">Mail Aliases</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <div class="container">
@@ -19,5 +35,11 @@
             {% block body %}{% endblock %}
         </div>
     </div>
+    
+    <footer class="footer mt-5 py-3 bg-dark">
+        <div class="container text-center">
+            <span class="text-muted">MailAdmin © {{ "now"|date("Y") }}</span>
+        </div>
+    </footer>
 </body>
 </html>
