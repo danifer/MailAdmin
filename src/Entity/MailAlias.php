@@ -3,11 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\MailAliasRepository;
-use App\Validator\EmailMatchesDomain;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[EmailMatchesDomain]
 #[ORM\Entity(repositoryClass: MailAliasRepository::class)]
 class MailAlias
 {
@@ -17,16 +15,12 @@ class MailAlias
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'mailAliases')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Domain $domain = null;
-
-    #[ORM\ManyToOne(inversedBy: 'mailAliases')]
     private ?MailAccount $mailAccount = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private ?string $source = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $destination = null;
 
     public function getId(): ?int
@@ -34,17 +28,6 @@ class MailAlias
         return $this->id;
     }
 
-    public function getDomain(): ?Domain
-    {
-        return $this->domain;
-    }
-
-    public function setDomain(?Domain $domain): static
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
 
     public function getSource(): ?string
     {

@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Domain;
 use App\Entity\MailAlias;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,32 +37,24 @@ class MailAliasType extends AbstractType
                 ],
             ])
             ->add('destination', TextType::class, [
-                'label' => 'Destination Address',
+                'label' => 'Destination Addresses',
                 'attr' => [
-                    'placeholder' => 'user@example.com',
-                    'maxlength' => 180
+                    'placeholder' => 'user1@example.com, user2@example.com',
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a destination address',
+                        'message' => 'Please enter at least one destination address',
                     ]),
-                    new Length([
-                        'max' => 180,
-                        'maxMessage' => 'Destination address cannot be longer than {{ limit }} characters',
-                    ]),
-                    new Email([
-                        'message' => 'Please enter a valid email address',
-                    ]),
-                ],
-            ])
-            ->add('domain', EntityType::class, [
-                'class' => Domain::class,
-                'choice_label' => 'domainName',
-                'placeholder' => 'Select a domain',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please select a domain',
-                    ]),
+                    new Callback(function ($value, ExecutionContextInterface $context) {
+                        $emails = array_map('trim', explode(',', $value));
+                        foreach ($emails as $email) {
+                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $context->buildViolation('The email {{ value }} is not a valid email address.')
+                                    ->setParameter('{{ value }}', $email)
+                                    ->addViolation();
+                            }
+                        }
+                    }),
                 ],
             ])
         ;
