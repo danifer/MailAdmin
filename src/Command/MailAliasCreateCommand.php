@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
@@ -38,6 +39,23 @@ class MailAliasCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $source = $input->getArgument('source');
+        $destination = $input->getArgument('destination');
+        
+        // Validate email addresses
+        $emailConstraint = new Email(['message' => 'The email {{ value }} is not a valid email address.']);
+        
+        $sourceErrors = $this->validator->validate($source, $emailConstraint);
+        if (count($sourceErrors) > 0) {
+            $io->error($sourceErrors[0]->getMessage());
+            return Command::FAILURE;
+        }
+        
+        $destinationErrors = $this->validator->validate($destination, $emailConstraint);
+        if (count($destinationErrors) > 0) {
+            $io->error($destinationErrors[0]->getMessage());
+            return Command::FAILURE;
+        }
         
         // Get and validate domain
         $domainName = $input->getArgument('domain');
