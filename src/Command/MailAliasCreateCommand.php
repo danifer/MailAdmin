@@ -23,7 +23,6 @@ class MailAliasCreateCommand extends Command
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator,
-        private DomainRepository $domainRepository,
     ) {
         parent::__construct();
     }

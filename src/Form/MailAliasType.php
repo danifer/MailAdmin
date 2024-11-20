@@ -27,7 +27,7 @@ class MailAliasType extends AbstractType
                     new NotBlank([
                         'message' => 'Please enter a source address',
                     ]),
-                    new Email([
+                    new Assert\Email([
                         'message' => 'Please enter a valid email address',
                     ]),
                     new Length([

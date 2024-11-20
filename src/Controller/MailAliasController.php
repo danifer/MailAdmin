@@ -31,6 +31,10 @@ final class MailAliasController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Clean up destination addresses
+            $destinations = array_map('trim', explode(',', $mailAlias->getDestination()));
+            $mailAlias->setDestination(implode(',', $destinations));
+            
             $entityManager->persist($mailAlias);
             $entityManager->flush();
 
