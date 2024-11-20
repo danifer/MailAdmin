@@ -23,7 +23,7 @@ class MailAlias
     #[ORM\ManyToOne(inversedBy: 'mailAliases')]
     private ?MailAccount $mailAccount = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, unique: true)]
     private ?string $source = null;
 
     #[ORM\Column(type: Types::TEXT)]
