@@ -23,13 +23,22 @@ final class MailAliasController extends AbstractController
     }
 
     #[Route('/new', name: 'app_mail_alias_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, MailAccountRepository $mailAccountRepository): Response
     {
         $mailAlias = new MailAlias();
         $form = $this->createForm(MailAliasType::class, $mailAlias);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Find the mail account based on the first destination email
+            $destinations = array_map('trim', explode(',', $mailAlias->getDestination()));
+            $firstDestination = $destinations[0];
+            $mailAccount = $mailAccountRepository->findOneBy(['email' => $firstDestination]);
+            
+            if ($mailAccount) {
+                $mailAlias->setMailAccount($mailAccount);
+            }
+
             $entityManager->persist($mailAlias);
             $entityManager->flush();
 

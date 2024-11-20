@@ -63,6 +63,16 @@ class MailAliasCreateCommand extends Command
             return Command::FAILURE;
         }
 
+        // Find and associate the mail account based on the first destination email
+        $destinations = array_map('trim', explode(',', $mailAlias->getDestination()));
+        $firstDestination = $destinations[0];
+        $mailAccount = $this->entityManager->getRepository(\App\Entity\MailAccount::class)
+            ->findOneBy(['email' => $firstDestination]);
+        
+        if ($mailAccount) {
+            $mailAlias->setMailAccount($mailAccount);
+        }
+
         // Save to database
         $this->entityManager->persist($mailAlias);
         $this->entityManager->flush();
