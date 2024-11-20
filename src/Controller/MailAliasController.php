@@ -30,10 +30,8 @@ final class MailAliasController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Find the mail account based on the first destination email
-            $destinations = array_map('trim', explode(',', $mailAlias->getDestination()));
-            $firstDestination = $destinations[0];
-            $mailAccount = $mailAccountRepository->findOneBy(['email' => $firstDestination]);
+            // Find the mail account based on the destination email
+            $mailAccount = $mailAccountRepository->findOneBy(['email' => $mailAlias->getDestination()]);
             
             if ($mailAccount) {
                 $mailAlias->setMailAccount($mailAccount);

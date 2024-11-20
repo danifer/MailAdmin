@@ -44,25 +44,17 @@ class MailAliasType extends AbstractType
                     'placeholder' => 'user@example.com',
                     'maxlength' => 180
                 ],
-                'help' => 'Multiple email addresses can be separated by commas',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter at least one destination address',
+                        'message' => 'Please enter a destination address',
                     ]),
                     new Length([
-                        'max' => 1000,
-                        'maxMessage' => 'Destination addresses cannot be longer than {{ limit }} characters total',
+                        'max' => 180,
+                        'maxMessage' => 'Destination address cannot be longer than {{ limit }} characters',
                     ]),
-                    new Callback(function($value, ExecutionContext $context) {
-                        $emails = array_map('trim', explode(',', $value));
-                        foreach ($emails as $email) {
-                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                                $context->buildViolation('The email address "{{ email }}" is not valid')
-                                    ->setParameter('{{ email }}', $email)
-                                    ->addViolation();
-                            }
-                        }
-                    }),
+                    new Email([
+                        'message' => 'Please enter a valid email address',
+                    ]),
                 ],
             ])
             ->add('domain', EntityType::class, [
