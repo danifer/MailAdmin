@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\MailAccountRepository;
 use App\Validator\EmailMatchesDomain;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,14 @@ class MailAccount
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $email = null;
+
+    #[ORM\OneToMany(mappedBy: 'mailAccount', targetEntity: MailAlias::class, cascade: ['remove'])]
+    private Collection $mailAliases;
+
+    public function __construct()
+    {
+        $this->mailAliases = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -63,6 +73,36 @@ class MailAccount
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MailAlias>
+     */
+    public function getMailAliases(): Collection
+    {
+        return $this->mailAliases;
+    }
+
+    public function addMailAlias(MailAlias $mailAlias): static
+    {
+        if (!$this->mailAliases->contains($mailAlias)) {
+            $this->mailAliases->add($mailAlias);
+            $mailAlias->setMailAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMailAlias(MailAlias $mailAlias): static
+    {
+        if ($this->mailAliases->removeElement($mailAlias)) {
+            // set the owning side to null (unless already changed)
+            if ($mailAlias->getMailAccount() === $this) {
+                $mailAlias->setMailAccount(null);
+            }
+        }
 
         return $this;
     }

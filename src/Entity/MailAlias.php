@@ -20,6 +20,9 @@ class MailAlias
     #[ORM\JoinColumn(nullable: false)]
     private ?Domain $domain = null;
 
+    #[ORM\ManyToOne(inversedBy: 'mailAliases')]
+    private ?MailAccount $mailAccount = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $source = null;
 
@@ -63,6 +66,18 @@ class MailAlias
     public function setDestination(string $destination): static
     {
         $this->destination = $destination;
+
+        return $this;
+    }
+
+    public function getMailAccount(): ?MailAccount
+    {
+        return $this->mailAccount;
+    }
+
+    public function setMailAccount(?MailAccount $mailAccount): static
+    {
+        $this->mailAccount = $mailAccount;
 
         return $this;
     }
