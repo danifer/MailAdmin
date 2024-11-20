@@ -33,6 +33,7 @@ final class DomainController extends AbstractController
             $entityManager->persist($domain);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Domain created successfully.');
             return $this->redirectToRoute('app_domain_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -59,6 +60,7 @@ final class DomainController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Domain updated successfully.');
             return $this->redirectToRoute('app_domain_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -74,6 +76,7 @@ final class DomainController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$domain->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($domain);
             $entityManager->flush();
+            $this->addFlash('success', 'Domain deleted successfully.');
         }
 
         return $this->redirectToRoute('app_domain_index', [], Response::HTTP_SEE_OTHER);

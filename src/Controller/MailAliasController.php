@@ -33,6 +33,7 @@ final class MailAliasController extends AbstractController
             $entityManager->persist($mailAlias);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Mail alias created successfully.');
             return $this->redirectToRoute('app_mail_alias_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -59,6 +60,7 @@ final class MailAliasController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Mail alias updated successfully.');
             return $this->redirectToRoute('app_mail_alias_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -74,6 +76,7 @@ final class MailAliasController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$mailAlias->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($mailAlias);
             $entityManager->flush();
+            $this->addFlash('success', 'Mail alias deleted successfully.');
         }
 
         return $this->redirectToRoute('app_mail_alias_index', [], Response::HTTP_SEE_OTHER);

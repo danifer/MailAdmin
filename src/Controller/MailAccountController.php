@@ -33,6 +33,7 @@ final class MailAccountController extends AbstractController
             $entityManager->persist($mailAccount);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Mail account created successfully.');
             return $this->redirectToRoute('app_mail_account_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -59,6 +60,7 @@ final class MailAccountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Mail account updated successfully.');
             return $this->redirectToRoute('app_mail_account_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -74,6 +76,7 @@ final class MailAccountController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$mailAccount->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($mailAccount);
             $entityManager->flush();
+            $this->addFlash('success', 'Mail account deleted successfully.');
         }
 
         return $this->redirectToRoute('app_mail_account_index', [], Response::HTTP_SEE_OTHER);
