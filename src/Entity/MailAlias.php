@@ -29,7 +29,6 @@ class MailAlias
         return $this->id;
     }
 
-
     public function getSource(): ?string
     {
         return $this->source;
@@ -53,5 +52,4 @@ class MailAlias
 
         return $this;
     }
-
 }
