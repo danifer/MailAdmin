@@ -1,31 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}MailAlias{% endblock %}
+{% block title %}Mail Alias Details{% endblock %}
 
 {% block body %}
-    <h1>MailAlias</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ mail_alias.id }}</td>
-            </tr>
-            <tr>
-                <th>Source</th>
-                <td>{{ mail_alias.source }}</td>
-            </tr>
-            <tr>
-                <th>Destination</th>
-                <td>{{ mail_alias.destination }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="mt-4">
-        <a href="{{ path('app_mail_alias_index') }}" class="btn btn-secondary">Back to List</a>
-        <a href="{{ path('app_mail_alias_edit', {'id': mail_alias.id}) }}" class="btn btn-primary">Edit</a>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900">Mail Alias Details</h1>
+        <a href="{{ path('app_mail_alias_index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md">
+            <i class="fas fa-arrow-left mr-2"></i> Back to List
+        </a>
     </div>
 
-    {{ include('mail_alias/_delete_form.html.twig') }}
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <tbody class="divide-y divide-gray-200">
+                <tr>
+                    <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 w-48">ID</th>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ mail_alias.id }}</td>
+                </tr>
+                <tr>
+                    <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500">Source</th>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ mail_alias.source }}</td>
+                </tr>
+                <tr>
+                    <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500">Destination</th>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ mail_alias.destination }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6 flex gap-3">
+        <a href="{{ path('app_mail_alias_edit', {'id': mail_alias.id}) }}" 
+           class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md">
+            <i class="fas fa-edit mr-2"></i> Edit
+        </a>
+        {{ include('mail_alias/_delete_form.html.twig') }}
+    </div>
 {% endblock %}
