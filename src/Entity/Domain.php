@@ -25,16 +25,9 @@ class Domain
     #[ORM\OneToMany(targetEntity: MailAccount::class, mappedBy: 'domain')]
     private Collection $mailAccounts;
 
-    /**
-     * @var Collection<int, MailAlias>
-     */
-    #[ORM\OneToMany(targetEntity: MailAlias::class, mappedBy: 'domain')]
-    private Collection $mailAliases;
-
     public function __construct()
     {
         $this->mailAccounts = new ArrayCollection();
-        $this->mailAliases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,36 +71,6 @@ class Domain
             // set the owning side to null (unless already changed)
             if ($mailAccount->getDomain() === $this) {
                 $mailAccount->setDomain(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, MailAlias>
-     */
-    public function getMailAliases(): Collection
-    {
-        return $this->mailAliases;
-    }
-
-    public function addMailAlias(MailAlias $mailAlias): static
-    {
-        if (!$this->mailAliases->contains($mailAlias)) {
-            $this->mailAliases->add($mailAlias);
-            $mailAlias->setDomain($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMailAlias(MailAlias $mailAlias): static
-    {
-        if ($this->mailAliases->removeElement($mailAlias)) {
-            // set the owning side to null (unless already changed)
-            if ($mailAlias->getDomain() === $this) {
-                $mailAlias->setDomain(null);
             }
         }
 

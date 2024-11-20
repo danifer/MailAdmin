@@ -55,4 +55,18 @@ class MailAlias
         return $this;
     }
 
+    public function removeFromDestination(string $string): static
+    {
+        $string = trim($string);
+        $destinations = array_map('trim', explode(',', $this->getDestination()));
+
+        $this->setDestination(
+            implode(',', array_filter(
+                array_diff(
+                $destinations, [$string]
+            )))
+        );
+
+        return $this;
+    }
 }

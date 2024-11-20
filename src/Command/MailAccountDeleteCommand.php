@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Repository\MailAccountRepository;
+use App\Repository\MailAliasRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -17,9 +18,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class MailAccountDeleteCommand extends Command
 {
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private MailAccountRepository $mailAccountRepository,
+        private MailAliasRepository $mailAliasRepository,
     ) {
         parent::__construct();
     }
@@ -40,7 +43,12 @@ class MailAccountDeleteCommand extends Command
             return Command::FAILURE;
         }
 
-        $aliases = $mailAccount->getMailAliases();
+        if (!$mailAccount) {
+            $io->error(sprintf('Mail account "%s" not found.', $email));
+            return Command::FAILURE;
+        }
+
+        $aliases = $this->mailAliasRepository->findDestinationsContainingString($email);
         if (count($aliases) > 0) {
             $io->section('This account has the following mail aliases that will also be deleted:');
             $rows = [];
@@ -56,6 +64,16 @@ class MailAccountDeleteCommand extends Command
         if (!$io->confirm(sprintf('Are you sure you want to delete mail account "%s" and all its aliases?', $email), false)) {
             $io->note('Operation cancelled.');
             return Command::SUCCESS;
+        }
+
+        foreach ($aliases as $alias) {
+            $alias->removeFromDestination($email);
+
+            if (empty($alias->getDestination())) {
+                $this->entityManager->remove($alias);
+            } else {
+                $this->entityManager->persist($alias);
+            }
         }
 
         $this->entityManager->remove($mailAccount);

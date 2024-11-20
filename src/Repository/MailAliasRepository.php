@@ -16,6 +16,25 @@ class MailAliasRepository extends ServiceEntityRepository
         parent::__construct($registry, MailAlias::class);
     }
 
+    public function findDestinationsContainingString(string $string): array
+    {
+        $arr = $this->createQueryBuilder('m')
+            ->andWhere('m.destination LIKE :val')
+            ->setParameter('val', '%' . $string . '%')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return array_filter($arr, callback: function($item) use ($string) {
+            $destinations = explode(',', $item->getDestination());
+            array_walk($destinations, 'trim');
+            if (in_array($string, $destinations, true)) {
+                return true;
+            }
+            return false;
+        });
+    }
+
     //    /**
     //     * @return MailAlias[] Returns an array of MailAlias objects
     //     */
