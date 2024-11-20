@@ -28,12 +28,8 @@ class MailAccount
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private ?string $email = null;
 
-    #[ORM\OneToMany(mappedBy: 'mailAccount', targetEntity: MailAlias::class, cascade: ['remove'])]
-    private Collection $mailAliases;
-
     public function __construct()
     {
-        $this->mailAliases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,33 +73,4 @@ class MailAccount
         return $this;
     }
 
-    /**
-     * @return Collection<int, MailAlias>
-     */
-    public function getMailAliases(): Collection
-    {
-        return $this->mailAliases;
-    }
-
-    public function addMailAlias(MailAlias $mailAlias): static
-    {
-        if (!$this->mailAliases->contains($mailAlias)) {
-            $this->mailAliases->add($mailAlias);
-            $mailAlias->setMailAccount($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMailAlias(MailAlias $mailAlias): static
-    {
-        if ($this->mailAliases->removeElement($mailAlias)) {
-            // set the owning side to null (unless already changed)
-            if ($mailAlias->getMailAccount() === $this) {
-                $mailAlias->setMailAccount(null);
-            }
-        }
-
-        return $this;
-    }
 }
