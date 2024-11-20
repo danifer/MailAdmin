@@ -9,7 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Context\ExecutionContext;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -43,17 +44,25 @@ class MailAliasType extends AbstractType
                     'placeholder' => 'user@example.com',
                     'maxlength' => 180
                 ],
+                'help' => 'Multiple email addresses can be separated by commas',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a destination address',
-                    ]),
-                    new Email([
-                        'message' => 'Please enter a valid email address',
+                        'message' => 'Please enter at least one destination address',
                     ]),
                     new Length([
-                        'max' => 180,
-                        'maxMessage' => 'Destination address cannot be longer than {{ limit }} characters',
+                        'max' => 1000,
+                        'maxMessage' => 'Destination addresses cannot be longer than {{ limit }} characters total',
                     ]),
+                    new Callback(function($value, ExecutionContext $context) {
+                        $emails = array_map('trim', explode(',', $value));
+                        foreach ($emails as $email) {
+                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $context->buildViolation('The email address "{{ email }}" is not valid')
+                                    ->setParameter('{{ email }}', $email)
+                                    ->addViolation();
+                            }
+                        }
+                    }),
                 ],
             ])
             ->add('domain', EntityType::class, [

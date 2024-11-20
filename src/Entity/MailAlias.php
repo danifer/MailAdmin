@@ -26,7 +26,7 @@ class MailAlias
     #[ORM\Column(type: Types::TEXT, unique: true)]
     private ?string $source = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, length: 1000)]
     private ?string $destination = null;
 
     public function getId(): ?int
