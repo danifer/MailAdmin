@@ -40,7 +40,20 @@ class MailAccountDeleteCommand extends Command
             return Command::FAILURE;
         }
 
-        if (!$io->confirm(sprintf('Are you sure you want to delete mail account "%s"?', $email), false)) {
+        $aliases = $mailAccount->getMailAliases();
+        if (count($aliases) > 0) {
+            $io->section('This account has the following mail aliases that will also be deleted:');
+            $rows = [];
+            foreach ($aliases as $alias) {
+                $rows[] = [
+                    $alias->getSource(),
+                    $alias->getDestination()
+                ];
+            }
+            $io->table(['Source', 'Destination'], $rows);
+        }
+
+        if (!$io->confirm(sprintf('Are you sure you want to delete mail account "%s" and all its aliases?', $email), false)) {
             $io->note('Operation cancelled.');
             return Command::SUCCESS;
         }

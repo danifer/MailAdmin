@@ -1,5 +1,5 @@
 <form method="post" action="{{ path('app_mail_account_delete', {'id': mail_account.id}) }}" 
-      onsubmit="return confirm('Warning: You are about to delete this mail account.\n\nThis action cannot be undone and all associated data will be permanently removed.\n\nAre you sure you want to continue?');"
+      onsubmit="return confirm('Warning: You are about to delete this mail account.\n\n{% if mail_account.mailAliases|length > 0 %}The following mail aliases will also be deleted:\n{% for alias in mail_account.mailAliases %}- {{ alias.source }} → {{ alias.destination }}\n{% endfor %}\n{% endif %}This action cannot be undone and all associated data will be permanently removed.\n\nAre you sure you want to continue?');"
       class="inline-block">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mail_account.id) }}">
     <button class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
