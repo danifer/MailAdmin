@@ -25,8 +25,6 @@ class MailAlias
     #[ORM\Column(type: Types::TEXT)]
     private ?string $destination = null;
 
-    #[ORM\ManyToOne(inversedBy: 'mailAliases')]
-    private ?MailAccount $mailAccount = null;
 
     public function getId(): ?int
     {
@@ -57,15 +55,4 @@ class MailAlias
         return $this;
     }
 
-    public function getMailAccount(): ?MailAccount
-    {
-        return $this->mailAccount;
-    }
-
-    public function setMailAccount(?MailAccount $mailAccount): static
-    {
-        $this->mailAccount = $mailAccount;
-
-        return $this;
-    }
 }
