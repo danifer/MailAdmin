@@ -13,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:domain:delete',
-    description: 'Deletes a domain',
+    description: 'Deletes a domain by name',
 )]
 class DomainDeleteCommand extends Command
 {
@@ -26,17 +26,17 @@ class DomainDeleteCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('id', InputArgument::REQUIRED, 'The domain ID');
+        $this->addArgument('domain-name', InputArgument::REQUIRED, 'The domain name to delete');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $id = $input->getArgument('id');
+        $domainName = $input->getArgument('domain-name');
 
-        $domain = $this->domainRepository->find($id);
+        $domain = $this->domainRepository->findOneBy(['domainName' => $domainName]);
         if (!$domain) {
-            $io->error(sprintf('Domain with ID "%s" not found.', $id));
+            $io->error(sprintf('Domain "%s" not found.', $domainName));
             return Command::FAILURE;
         }
 
