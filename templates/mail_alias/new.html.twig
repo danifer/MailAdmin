@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New MailAlias{% endblock %}
+{% block title %}New Mail Alias{% endblock %}
 
 {% block body %}
-    <h1>Create new MailAlias</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900">Create New Mail Alias</h1>
+        <a href="{{ path('app_mail_alias_index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md">
+            <i class="fas fa-arrow-left mr-2"></i> Back to List
+        </a>
+    </div>
 
     {{ include('mail_alias/_form.html.twig') }}
-
-    <a href="{{ path('app_mail_alias_index') }}">back to list</a>
 {% endblock %}

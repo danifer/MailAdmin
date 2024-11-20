@@ -3,11 +3,16 @@
 {% block title %}Edit Domain{% endblock %}
 
 {% block body %}
-    <h1>Edit Domain</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900">Edit Domain</h1>
+        <a href="{{ path('app_domain_index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md">
+            <i class="fas fa-arrow-left mr-2"></i> Back to List
+        </a>
+    </div>
 
     {{ include('domain/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_domain_index') }}">back to list</a>
-
-    {{ include('domain/_delete_form.html.twig') }}
+    <div class="mt-6">
+        {{ include('domain/_delete_form.html.twig') }}
+    </div>
 {% endblock %}
