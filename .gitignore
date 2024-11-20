@@ -9,6 +9,16 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+###> phpstorm ###
+.idea
+###< phpstorm ###
+
+
+###> aider ###
+.aider
+.aider.*
+###< aider ###
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
