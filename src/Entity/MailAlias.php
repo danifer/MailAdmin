@@ -14,7 +14,7 @@ class MailAlias
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 254, unique: true)]
     private ?string $source = null;
 
     #[ORM\Column(type: Types::TEXT)]

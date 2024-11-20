@@ -31,7 +31,7 @@ class MailAliasType extends AbstractType
                         'message' => 'Please enter a valid email address',
                     ]),
                     new Length([
-                        'max' => 180,
+                        'max' => 254,
                         'maxMessage' => 'Source address cannot be longer than {{ limit }} characters',
                     ]),
                 ],
